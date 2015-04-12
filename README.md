@@ -31,7 +31,7 @@ var task = new daqmx.AIVoltageTask({
 
 task.start();
 
-var x = task.read(10.0); // timeout = 1s, -1 for infinite timeout
+var x = task.read(10.0); // timeout = 10s, -1 for infinite timeout
 
 console.log(x);
 ```
