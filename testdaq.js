@@ -60,7 +60,7 @@ try{
             hysteresis: 1.0 // optional for analog trigger only, default 0.0
         }
     });
-*/
+
 
     // geterdone example with two channels
     var task = new daqmx.AIVoltageTask({
@@ -109,7 +109,9 @@ try{
     readAsync(function(data){
         console.log(data);
     });
+*/
 
+    console.log(daqmx.devices());
 
 
 

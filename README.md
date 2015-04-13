@@ -122,3 +122,21 @@ var task = new daqmx.AIVoltageTask({
     }
 });
 ```
+## Devices
+
+To get a list of currently available devices.
+
+```JavaScript
+var devs = daqmx.devices();
+```
+
+returns an array of objects of each device with properties: E.G.
+```JavaScript
+[{
+    name: "Dev1",
+    productType: "USB-6000"
+},
+{
+    name: "Dev2",
+    productType: "PCI-6071E"
+}]
