@@ -32,7 +32,7 @@ returns an array of objects of each device with properties: E.G.
 
 ## AI Voltage Task
 
-The minimal configuration to acquire a sample must have defined the channels to acquire on, and the timing of the samples. Specifying the channels separatly as an array will cause the read to return a 2D array, where the first index is the channels (in the same order), and second index is sample #. If you specify the channels as a single string, it will return a single channel array with all samples grouped by channel (all channels within a task sample the same number of samples, at the same rate). There can typically be only one task of each type running per physical device because of how the signals are digitized. There's usually only 1 ADC (or DAC), which is split between the channels.
+The minimal configuration to acquire a sample must have defined the channels to acquire on, and the timing of the samples. Specifying the channels separatly as an array will cause the read to return a 2D array, where the first index is the channels (in the same order), and second index is sample #. There can typically be only one task of each type running per physical device because of how the signals are digitized. There's usually only 1 ADC (or DAC), which is split between the channels.
 
 ```JavaScript
 var daqmx = require('pathto/nodedaqmx');
