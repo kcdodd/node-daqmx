@@ -74,19 +74,22 @@ void AIVoltageTask::New(const FunctionCallbackInfo<Value>& args) {
 
         throwIfFailed(isolate, DAQmxCreateTask(taskName.c_str(), &(obj->taskHandle)));
 
+        std::string deviceName(*v8::String::Utf8Value(
+            specs->Get(String::NewFromUtf8(isolate, "device"))->ToString()));
+
         Local<Array> aichannels = Local<Array>::Cast(specs->Get(String::NewFromUtf8(isolate, "channels")));
 
-        obj->numChannels = aichannels->Length();
-
-        for(int i = 0; i < obj->numChannels; i++) {
+        for(int i = 0; i < aichannels->Length(); i++) {
             // DAQmxCreateAIVoltageChan
 
             Local<Object> channel = aichannels->Get(i)->ToObject();
             Local<Value> tmpValue;
 
 
-            std::string physicalChannel(*v8::String::Utf8Value(
-                channel->Get(String::NewFromUtf8(isolate, "physicalChannel"))->ToString()));
+            std::string channelName(*v8::String::Utf8Value(
+                channel->Get(String::NewFromUtf8(isolate, "terminal"))->ToString()));
+
+            std::string physicalChannel = deviceName + "/" + channelName;
 
             std::string nameToAssignToChannel = "";
 
@@ -142,6 +145,12 @@ void AIVoltageTask::New(const FunctionCallbackInfo<Value>& args) {
                 customScale));
         }
 
+
+        throwIfFailed(isolate, DAQmxGetTaskAttribute(
+            obj->taskHandle,
+            DAQmx_Task_NumChans,
+            &(obj->numChannels)));
+
         //DAQmxCfgSampClkTiming
 
         Local<Object> timing = specs->Get(String::NewFromUtf8(isolate, "sampleTiming"))->ToObject();
@@ -149,14 +158,10 @@ void AIVoltageTask::New(const FunctionCallbackInfo<Value>& args) {
 
         std::string source = "";
 
-        if (!timing->Get(String::NewFromUtf8(isolate, "source"))->IsUndefined())
+        if (!timing->Get(String::NewFromUtf8(isolate, "terminal"))->IsUndefined())
         {
             source = std::string(*v8::String::Utf8Value(
-                timing->Get(String::NewFromUtf8(isolate, "source"))->ToString()));
-        }
-
-        if (source.compare("internal") == 0) {
-            source = "";
+                timing->Get(String::NewFromUtf8(isolate, "terminal"))->ToString()));
         }
 
         float64 rate = (float64) timing->Get(String::NewFromUtf8(isolate, "rate"))->NumberValue();

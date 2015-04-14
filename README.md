@@ -40,10 +40,9 @@ var daqmx = require('pathto/nodedaqmx');
 // read 10 samples from 2 channels at 10,000Hz sample rate
 var task = new daqmx.AIVoltageTask({
 
-    channels: [
-        {physicalChannel: "Dev1/ai0"},
-        {physicalChannel: "Dev1/ai1"}
-    ],
+    device: "Dev1",
+
+    channels: [{terminal: "ai0"},{terminal: "ai3"}],
 
     sampleTiming: {
         rate: 10000.0,
@@ -61,6 +60,22 @@ var x = task.read(); // infinite timeout
 console.log(x);
 ```
 
+Alternatly, if the terminals are consecutive, they can be specified in a single input. E.G. the following will acquire from 4 terminals (ai0, ai1, ai2, ai3).
+
+```JavaScript
+var task = new daqmx.AIVoltageTask({
+
+    device: "Dev1",
+
+    channels: [{terminal: "ai0:3"}],
+
+    sampleTiming: {
+        rate: 10000.0,
+        samplesPerChannel: 10
+    }
+});
+```
+
 The reading of samples can also be done in the Node.js io loop so that it doesn't block the program execution.
 
 ```JavaScript
@@ -70,7 +85,7 @@ var readAsync = function(callback) {
     process.nextTick(function(){
         // call canRead() tests if all samples can be read
         if (task.canRead()) {
-            var data = task.read(0.0); // should be immediate
+            var data = task.read(0.0); // should read immediatly
 
             callback(data);
         }else{
@@ -94,15 +109,17 @@ var task = new daqmx.AIVoltageTask({
 
     name: "myAIVoltageTask", // optional name for task, default ""
 
+    device: "Dev1", // physical device name
+
     channels: [{ // array of objects specifying the channels to acquire
-        physicalChannel: "Dev1/ai0", // physical device and channel name
+        terminal: "ai0", // physical terminal name
         assignName: "someChannelName" // optional name for channel
         minVal: -10.0, // optional, default -10.0
         maxVal: 10.0 // optional, default 10.0
     }],
 
     sampleTiming: { // timing for individual samples
-        source: "internal", // optional default 'internal'
+        terminal: "OnboardClock", // optional, default is 'OnboardClock'
         rate: 10000.0, // sample rate in Hz
         triggerSlope: "falling", // optional, default rising
         sampleMode: "continuous", // optional, default finite
@@ -111,7 +128,7 @@ var task = new daqmx.AIVoltageTask({
 
     startTiming: { // optional timing for when to start the task
         type: "digital", // analog, or digital
-        source: "/Dev1/PFI0",
+        terminal: "PFI0",
         triggerSlope: "falling" // optional, default rising
     }
 });
@@ -124,14 +141,16 @@ var task = new daqmx.AIVoltageTask({
 
     name: "myAIVoltageTask",
 
+    device: "Dev1",
+
     channels: [{
-        physicalChannel: "Dev1/ai0",
+        terminal: "ai0",
         minVal: -10.0,
         maxVal: 10.0
     }],
 
     sampleTiming: {
-        source: "/Dev1/PFI7",
+        terminal: "PFI7",
         rate: 10000.0,
         triggerSlope: "rising",
         sampleMode: "finite",
@@ -140,7 +159,7 @@ var task = new daqmx.AIVoltageTask({
 
     startTiming: {
         type: "analog",
-        source: "APFI0",
+        terminal: "APFI0",
         triggerSlope: "rising", // optional, default rising
         triggerLevel: 1.0, // analog trigger only in volts
         hysteresis: 1.0 // optional for analog trigger only, default 0.0

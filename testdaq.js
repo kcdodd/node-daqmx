@@ -13,15 +13,17 @@ try{
 
         name: "myAIVoltageTask", // optional name for task, default ""
 
+        device: "Dev1", // physical device name
+
         channels: [{ // array of objects specifying the channels to acquire
-            physicalChannel: "Dev1/ai0", // physical device and channel name
+            terminal: "ai0", // physical terminal name
             assignName: "someChannelName" // optional name for channel
             minVal: -10.0, // optional, default -10.0
             maxVal: 10.0 // optional, default 10.0
         }],
 
         sampleTiming: { // timing for individual samples
-            source: "internal", // optional default 'internal'
+            terminal: "OnboardClock", // optional, default is 'OnboardClock'
             rate: 10000.0, // sample rate in Hz
             triggerSlope: "falling", // optional, default rising
             sampleMode: "continuous", // optional, default finite
@@ -30,7 +32,7 @@ try{
 
         startTiming: { // optional timing for when to start the task
             type: "digital", // analog, or digital
-            source: "/Dev1/PFI0",
+            terminal: "PFI0",
             triggerSlope: "falling" // optional, default rising
         }
     });
@@ -40,14 +42,16 @@ try{
 
         name: "myAIVoltageTask",
 
+        device: "Dev1",
+
         channels: [{
-            physicalChannel: "Dev1/ai0",
+            terminal: "ai0",
             minVal: -10.0,
             maxVal: 10.0
         }],
 
         sampleTiming: {
-            source: "/Dev1/PFI7",
+            terminal: "PFI7",
             rate: 10000.0,
             triggerSlope: "rising",
             sampleMode: "finite",
@@ -56,7 +60,7 @@ try{
 
         startTiming: {
             type: "analog",
-            source: "APFI0",
+            terminal: "APFI0",
             triggerSlope: "rising", // optional, default rising
             triggerLevel: 1.0, // analog trigger only in volts
             hysteresis: 1.0 // optional for analog trigger only, default 0.0
@@ -67,10 +71,9 @@ try{
     // geterdone example with two channels
     var task = new daqmx.AIVoltageTask({
 
-        channels: [
-            {physicalChannel: "Dev1/ai0"},
-            {physicalChannel: "Dev1/ai1"}
-        ],
+        device: "Dev1",
+
+        channels: [{terminal: "ai0:3"}],
 
         sampleTiming: {
             rate: 10000.0,
@@ -83,7 +86,7 @@ try{
 
     var x = task.read(); // infinite timeout
     console.log(x);
-
+/*
     // restart same task
     task.stop();
     task.start();
@@ -107,7 +110,7 @@ try{
     readAsync(function(data){
         console.log(data);
     });
-
+*/
 
 
 
