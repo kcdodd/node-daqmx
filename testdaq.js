@@ -3,6 +3,8 @@ var daqmx = require('./build/Release/nodedaqmx');
 
 
 try{
+
+    console.log(daqmx.devices());
 /*
 
 
@@ -60,7 +62,7 @@ try{
             hysteresis: 1.0 // optional for analog trigger only, default 0.0
         }
     });
-
+*/
 
     // geterdone example with two channels
     var task = new daqmx.AIVoltageTask({
@@ -79,11 +81,7 @@ try{
 
     task.start();
 
-    var x = task.read(10.0); // timeout = 1s, -1 for infinite timeout
-    // careful because if not everything can be read within timeout, then
-    // only whatever could be read will be. The rest would have to be gotten
-    // using another call to read.
-
+    var x = task.read(); // infinite timeout
     console.log(x);
 
     // restart same task
@@ -109,9 +107,9 @@ try{
     readAsync(function(data){
         console.log(data);
     });
-*/
 
-    console.log(daqmx.devices());
+
+
 
 
 

@@ -4,12 +4,35 @@ I wanted to combine National Instruments data acquisition hardware with Node.js.
 
 ## Pre-requisits
 
-- installed latest [National Instruments DAQmx drivers](http://www.ni.com/download/ni-daqmx-14.5/5212/en/).
+- Everything needed to build Node.js addons.
+- Latest [National Instruments DAQmx drivers](http://www.ni.com/download/ni-daqmx-14.5/5212/en/).
 - Either a physical NI device, or a virtual device created using their Measurement and Automation Explorer.
+
+## Devices
+
+To get a list of currently available devices.
+
+```JavaScript
+var devs = daqmx.devices();
+
+console.log(devs);
+```
+
+returns an array of objects of each device with properties: E.G.
+```JavaScript
+[{
+    name: "Dev1",
+    productType: "USB-6000"
+},
+{
+    name: "Dev2",
+    productType: "PCI-6071E"
+}]
+```
 
 ## AI Voltage Task
 
-This is my first task to wrap. The minimal configuration to acquire a sample must have defined the channels to acquire on, and the timing of the samples. Specifying the channels separatly as an array will cause the read to return a 2D array, where the first index is the channels (in the same order), and second index is sample #. If you specify the channels as a single string, it will return a single channel array with all samples grouped by channel (all channels within a task sample the same number of samples, at the same rate). There can typically be only one task of each type running per physical device because of how the signals are digitized. There's usually only 1 ADC (or DAC), which is split between the channels.
+The minimal configuration to acquire a sample must have defined the channels to acquire on, and the timing of the samples. Specifying the channels separatly as an array will cause the read to return a 2D array, where the first index is the channels (in the same order), and second index is sample #. If you specify the channels as a single string, it will return a single channel array with all samples grouped by channel (all channels within a task sample the same number of samples, at the same rate). There can typically be only one task of each type running per physical device because of how the signals are digitized. There's usually only 1 ADC (or DAC), which is split between the channels.
 
 ```JavaScript
 var daqmx = require('pathto/nodedaqmx');
@@ -31,7 +54,9 @@ var task = new daqmx.AIVoltageTask({
 
 task.start();
 
-var x = task.read(10.0); // timeout = 10s, -1 for infinite timeout
+var x = task.read(); // infinite timeout
+
+//var x = task.read(10.0); // 10 second timeout
 
 console.log(x);
 ```
@@ -45,7 +70,7 @@ var readAsync = function(callback) {
     process.nextTick(function(){
         // call canRead() tests if all samples can be read
         if (task.canRead()) {
-            var data = task.read(0.0); // no timeout because I know its ready
+            var data = task.read(0.0); // should be immediate
 
             callback(data);
         }else{
@@ -122,21 +147,3 @@ var task = new daqmx.AIVoltageTask({
     }
 });
 ```
-## Devices
-
-To get a list of currently available devices.
-
-```JavaScript
-var devs = daqmx.devices();
-```
-
-returns an array of objects of each device with properties: E.G.
-```JavaScript
-[{
-    name: "Dev1",
-    productType: "USB-6000"
-},
-{
-    name: "Dev2",
-    productType: "PCI-6071E"
-}]

@@ -399,8 +399,13 @@ void AIVoltageTask::Read(const FunctionCallbackInfo<Value>& args) {
 
     AIVoltageTask* myTask = node::ObjectWrap::Unwrap<AIVoltageTask>(args.Holder());
 
-    float64 timeout = (float64) args[0]->NumberValue();
+    float64 timeout;
 
+    if (args[0]->IsUndefined()) {
+        timeout = -1.0;
+    }else{
+        timeout = (float64) args[0]->NumberValue();
+    }
 
     int32 sampsPerChanRead = 0;
 
