@@ -1,12 +1,16 @@
 # node-daqmx
 
-I wanted to combine National Instruments data acquisition hardware with Node.js. This is not a 1-to-1 wrapper of the DAQmx c api. I have re-interpreted some of the structures, but tried to be faithful to the original concepts. If you are familiar with DAQmx, a task in the c api is a generalized object, which has to be configured by adding or setting various properties and methods to accomplish anything. I took a more narrow rout with each type of task confined to a separate object.
+I wanted to combine National Instruments data acquisition hardware with Node.js. This is not a 1-to-1 wrapper of the DAQmx C api. I have re-interpreted some of the structures to make using DAQmx a little easier, but tried to be faithful to the original concepts.
+
+If you need the full api, considering using [node-ffi](https://github.com/node-ffi/node-ffi) to load nicaiu.dll (from the daqmx driver installation) to access all the C API functions.
 
 ## Pre-requisits
 
 - Everything needed to build Node.js addons.
 - Latest [National Instruments DAQmx drivers](http://www.ni.com/download/ni-daqmx-14.5/5212/en/).
 - Either a physical NI device, or a virtual device created using their Measurement and Automation Explorer.
+
+The following examples assume the addon is loaded into the variable 'daqmx'.
 
 ## Devices
 
@@ -35,8 +39,6 @@ returns an array of objects of each device with properties: E.G.
 The minimal configuration to acquire a sample must have defined the channels to acquire on, and the timing of the samples. Specifying the channels separatly as an array will cause the read to return a 2D array, where the first index is the channels (in the same order), and second index is sample #. There can typically be only one task of each type running per physical device because of how the signals are digitized. There's usually only 1 ADC (or DAC), which is split between the channels.
 
 ```JavaScript
-var daqmx = require('pathto/nodedaqmx');
-
 // read 10 samples from 2 channels at 10,000Hz sample rate
 var task = new daqmx.AIVoltageTask({
 
