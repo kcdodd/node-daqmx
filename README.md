@@ -7,7 +7,7 @@ If you need the full API, considering using [node-ffi](https://github.com/node-f
 ## Dependencies
 
 - Everything needed to build Node.js add-ons ([node-gyp and build tools for windows](https://github.com/nodejs/node-gyp/))
-- Latest [National Instruments DAQmx drivers](http://www.ni.com/download/ni-daqmx-14.5/5212/en/).
+- Latest [National Instruments DAQmx drivers](http://www.ni.com/download/ni-daqmx-16.0/6120/en/).
 - Either a physical NI device, or a virtual device created using their Measurement and Automation Explorer.
 
 The following examples assume the add-on is loaded into the variable 'daqmx'.
@@ -18,6 +18,14 @@ The following examples assume the add-on is loaded into the variable 'daqmx'.
 node-gyp rebuild # in root directory of repo
 node-gyp install
 ```
+
+Or just run `npm install`
+
+**This is a fork of [kcdodd's](https://github.com/kcdodd/node-daqmx) repository
+to bring it upto date and provide 64bit support. By default it is for 64bit, to use it with a 32bit system,
+change line 7 in 'binding.gpy' to:**
+
+`"libraries": [ "C:\Program Files (x86)\National Instruments\Shared\ExternalCompilerSupport\C\lib32\msvc\NIDAQmx.lib" ]`
 
 ## Devices
 
