@@ -4,6 +4,8 @@ I wanted to combine National Instruments data acquisition hardware with Node.js.
 
 If you need the full API, considering using [node-ffi](https://github.com/node-ffi/node-ffi) to load nicaiu.dll (from the daqmx driver installation) to access all the C API functions.
 
+Now you can build this library using Node 12 (and probably older versions that wouldn't work because **NewInstance** got deprecated).
+
 ## Dependencies
 
 - Everything needed to build Node.js add-ons ([node-gyp and build tools for windows](https://github.com/nodejs/node-gyp/))
@@ -38,6 +40,7 @@ console.log(devs);
 ```
 
 Returns an array of objects of each device with properties: E.G.
+
 ```JavaScript
 [{
     name: "Dev1",

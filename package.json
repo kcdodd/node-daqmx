@@ -3,7 +3,9 @@
   "version": "1.1.0",
   "description": "Node wrapper for National Instruments DAQmx C API",
   "main": "testdaq.js",
-  "dependencies": {},
+  "dependencies": {
+    "nan": "^2.14.0"
+  },
   "devDependencies": {},
   "scripts": {
     "test": "node testdaq.js",
@@ -20,7 +22,9 @@
     "DAQ"
   ],
   "author": "Carter Dodd",
-  "contributors": ["John Whittington <npm@jbrengineering.co.uk> (http://www.jbrengineering.co.uk)"],
+  "contributors": [
+    "John Whittington <npm@jbrengineering.co.uk> (http://www.jbrengineering.co.uk)"
+  ],
   "license": "GPL-3.0",
   "gypfile": true,
   "bugs": {
